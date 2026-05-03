@@ -133,6 +133,21 @@ class GhostNet(commands.Bot):
 
 bot = GhostNet()
 
+# -------------------------
+# 🔧 HYBRID HELPERS (ADD THIS)
+# -------------------------
+def is_interaction(ctx):
+    return ctx.interaction is not None
+
+async def respond(ctx, message, ephemeral=False):
+    if is_interaction(ctx):
+        if not ctx.interaction.response.is_done():
+            await ctx.interaction.response.send_message(message, ephemeral=ephemeral)
+        else:
+            await ctx.followup.send(message, ephemeral=ephemeral)
+    else:
+        await ctx.send(message)
+
 @bot.hybrid_command(name="help")
 async def help_command(ctx: commands.Context):
     if is_interaction(ctx):
